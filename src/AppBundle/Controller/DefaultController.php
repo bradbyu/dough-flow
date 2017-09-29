@@ -49,11 +49,8 @@ class DefaultController extends Controller
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                $data = $form->getData();
-                $em   = $this->getDoctrine()->getManager();
-                $account = new Account();
-                $account->setName($data['name']);
-                $account->setType($data['type']);
+                $account = $form->getData();
+                $em      = $this->getDoctrine()->getManager();
 
                 $em->persist($account);
                 $em->flush();
