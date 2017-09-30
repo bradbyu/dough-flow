@@ -2,11 +2,25 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>{% block title %}Welcome to Dough Flow{% endblock %}</title>
+        <title>
+            {% block title %}
+                Dough Flow
+                {% if title|default('') %}
+                    | {{ title }}
+                {% endif %}
+            {% endblock %}
+        </title>
         {% block stylesheets %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
+        {% block nav %}
+            <a href="{{ path('homepage') }}">Home</a>
+            |
+            <a href="{{ path('list_accounts') }}">Account List</a>
+            |
+            <a href="{{ path('create_account') }}">Create Financial Account</a>
+        {% endblock %}
         {% block flash %}
             {% for label, messages in app.flashes %}
                 {% for message in messages %}

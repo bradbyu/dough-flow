@@ -59,10 +59,12 @@ class DefaultController extends Controller
 
             $options = ['action' => $this->generateUrl('edit_account', ['id' => $id])];
             $form    = $this->createForm(AccountType::class, $account, $options);
+            $title   = 'Edit Account';
         } else {
             $account = new Account();
             $options       = ['action' => $this->generateUrl('create_account')];
             $form          = $this->createForm(AccountType::class, $account, $options);
+            $title         = 'Create Account';
         }
 
         $form->handleRequest($request);
@@ -83,7 +85,8 @@ class DefaultController extends Controller
         return $this->render(
             ':default:editAccount.html.twig',
             [
-                'form' => $form->createView()
+                'form'  => $form->createView(),
+                'title' => $title,
             ]
         );
     }
@@ -102,7 +105,8 @@ class DefaultController extends Controller
         return $this->render(
             ':default:listAccounts.html.twig',
             [
-                'accounts' => $accounts
+                'accounts' => $accounts,
+                'title'    => 'List Accounts',
             ]
         );
     }
