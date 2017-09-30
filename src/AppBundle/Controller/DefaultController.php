@@ -20,6 +20,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class DefaultController extends Controller
 {
+    const FLASH_SUCCESS = 'success';
+
     /**
      * @Route("/", name="homepage")
      *
@@ -37,23 +39,42 @@ class DefaultController extends Controller
 
     /**
      * @param Request $request
+     * @param int     $id
      *
      * @Route("/account/create", name="create_account")
+     * @Route("/account/{id}/edit", name="edit_account", requirements={"id" = "\d+"})
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function createAccountAction(Request $request)
+    public function editAccountAction(Request $request, int $id = null)
     {
-        $form = $this->createForm(AccountType::class);
+        $em      = $this->getDoctrine()->getManager();
+        if ($id) {
+            $repo    = $em->getRepository(Account::class);
+            $account = $repo->find($id);
+
+            if (is_null($account)) {
+                return $this->redirectToRoute('list_accounts');
+            }
+
+            $options = ['action' => $this->generateUrl('edit_account', ['id' => $id])];
+            $form    = $this->createForm(AccountType::class, $account, $options);
+        } else {
+            $account = new Account();
+            $options       = ['action' => $this->generateUrl('create_account')];
+            $form          = $this->createForm(AccountType::class, $account, $options);
+        }
 
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
-                $account = $form->getData();
-                $em      = $this->getDoctrine()->getManager();
-
                 $em->persist($account);
                 $em->flush();
+
+                $this->addFlash(
+                    static::FLASH_SUCCESS,
+                    "Your changes for the {$account->getName()} account have been saved"
+                );
 
                 return $this->redirectToRoute('list_accounts');
             }

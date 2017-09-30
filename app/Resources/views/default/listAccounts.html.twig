@@ -4,8 +4,7 @@
     <h1>Accounts</h1>
     <ul>
     {% for account in accounts %}
-        <li>Account Name: {{ account.name }}</li>
-        <li>Account Type: {{ account.type }}</li>
+        <li>{{ account.name }} ({{ account.type }}) <a href="{{ path('edit_account', {'id': account.id}) }}">Edit</a></li>
     {% endfor %}
     </ul>
 {% endblock %}
