@@ -1,4 +1,5 @@
 imports:
+    - { resource: dotenv.php }
     - { resource: config.yml }
 
 framework:
